@@ -1,8 +1,14 @@
-import React, { Component, createContext } from 'react'
+import React, { Component, createContext, useContext } from 'react'
 import createAuth0Client from '@auth0/auth0-spa-js'
 
 // create the context
 export const Auth0Context = createContext()
+
+// export the context as useAuth0
+export const useAuth0 = () => useContext(Auth0Context); // <-- new
+// We have added useContext and then used it directly in this file. 
+// Now we don't have to useContext() in our other components.
+// by adding import { useAuth0 } from './contexts/auth0-context' in App.js
 
 // create a provider
 export class Auth0Provider extends Component {
@@ -24,11 +30,36 @@ export class Auth0Provider extends Component {
   }
 
   // initialize the auth0 library
+  // initializeAuth0 = async () => {
+  //   const auth0Client = await createAuth0Client(this.config);
+  //   const isAuthenticated = await auth0Client.isAuthenticated() // <-- new
+  //   const user = isAuthenticated ? await auth0Client.getUser() : null // <-- new
+  //   this.setState({ auth0Client, isLoading: false, isAuthenticated, user }) // <-- updated
+  // }
+
   initializeAuth0 = async () => {
     const auth0Client = await createAuth0Client(this.config);
-    const isAuthenticated = await auth0Client.isAuthenticated() // <-- new
-    const user = isAuthenticated ? await auth0Client.getUser() : null // <-- new
-    this.setState({ auth0Client, isLoading: false, isAuthenticated, user }) // <-- updated
+    this.setState({ auth0Client });
+
+    // check to see if they have been redirected after login
+    if (window.location.search.includes('code=')) {
+      return this.handleRedirectCallback();
+    }
+
+    const isAuthenticated = await auth0Client.isAuthenticated();
+    const user = isAuthenticated ? await auth0Client.getUser() : null;
+    this.setState({ isLoading: false, isAuthenticated, user });
+  }
+
+  handleRedirectCallback = async () => {
+    this.setState({ isLoading: true })
+
+    await this.state.auth0Client.handleRedirectCallback()
+    const user = await this.state.auth0Client.getUser()
+
+    this.setState({ user, isAuthenticated: true, isLoading: false })
+    window.history.replaceState({}, document.title, window.location.pathname)
+    // removes it from the URL to prevent handleRedirectCallback() from running again if user refreshes the page
   }
 
   render() {
@@ -43,7 +74,7 @@ export class Auth0Provider extends Component {
       getTokenSilently: (...p) => auth0Client.getTokenSilently(...p),
       getIdTokenClaims: (...p) => auth0Client.getIdTokenClaims(...p),
       logout: (...p) => auth0Client.logout(...p)
-    } // <-- updated
+    }
 
     return (
       <Auth0Context.Provider value={configObject}>
