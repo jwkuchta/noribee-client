@@ -1,4 +1,4 @@
-import React, { Component, createContext, useContext } from 'react'
+import React, { Component, createContext, useContext, useState, useEffect } from 'react'
 import createAuth0Client from '@auth0/auth0-spa-js'
 
 // create the context
@@ -28,14 +28,6 @@ export class Auth0Provider extends Component {
   componentDidMount() {
     this.initializeAuth0()
   }
-
-  // initialize the auth0 library
-  // initializeAuth0 = async () => {
-  //   const auth0Client = await createAuth0Client(this.config);
-  //   const isAuthenticated = await auth0Client.isAuthenticated() // <-- new
-  //   const user = isAuthenticated ? await auth0Client.getUser() : null // <-- new
-  //   this.setState({ auth0Client, isLoading: false, isAuthenticated, user }) // <-- updated
-  // }
 
   initializeAuth0 = async () => {
     const auth0Client = await createAuth0Client(this.config);
@@ -73,7 +65,9 @@ export class Auth0Provider extends Component {
       loginWithRedirect: (...p) => auth0Client.loginWithRedirect(...p), // method provided by Auth0 SPA SDK
       getTokenSilently: (...p) => auth0Client.getTokenSilently(...p),
       getIdTokenClaims: (...p) => auth0Client.getIdTokenClaims(...p),
-      logout: (...p) => auth0Client.logout(...p)
+      logout: (...p) => auth0Client.logout(...p),
+      handleRedirectCallback: (...p) => auth0Client.handleRedirectCallback(...p),
+      getUser: (...p) => auth0Client.getUser(...p)
     }
 
     return (
