@@ -1,5 +1,4 @@
 
-
 export const addUserToDB = (user) => {
     fetch('http://localhost:3000/users', {
       method: 'POST',
@@ -8,7 +7,7 @@ export const addUserToDB = (user) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify({nickname: user.nickname})
+      body: JSON.stringify({user})
     })
     .then(resp => resp.json())
     .then(data => console.log(data))

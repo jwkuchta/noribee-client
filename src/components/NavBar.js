@@ -1,26 +1,34 @@
-import React from "react";
+import React from 'react';
 import { useAuth0 } from "../react-auth0-spa";
-import 'bulma/css/bulma.css'
 import { Link } from "react-router-dom";
+import '../stylesheets/NavBar.scss'
+import 'bulma/css/bulma.css'
 
-const NavBar = () => {
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+export default function NavBar() {
+  const { isLoading, user, loginWithRedirect, logout } = useAuth0();
 
   return (
-    <div>
-      {!isAuthenticated && (<button onClick={() => loginWithRedirect({})}>Log in</button>)}
-      {isAuthenticated && <button onClick={() => logout()}>Log out</button>}
-
-      {isAuthenticated && (
-      <span>
-        <Link to="/">Home</Link>&nbsp;
-        <Link to="/profile">Profile</Link>
-      </span>
-    )}
-
-      
-    </div>
+    <header>
+      <nav className="navbar is-dark">
+        <div className="container is-fluid">
+          <div className="navbar-menu is-active">
+            <div className="navbar-brand">
+              <button className="navbar-item">My Cool App!</button>
+            </div>
+            <div className="navbar-end">
+              {!isLoading && !user && (<button onClick={loginWithRedirect} className="navbar-item">Login</button>)}
+              {!isLoading && user && (
+                <>
+                  <button className="navbar-item">{user.name} <img src={user.picture} alt="My Avatar" /></button>
+                  <button onClick={() => logout({ returnTo: window.location.origin })}className="navbar-item">Logout</button>
+                  <button className="navbar-item"><Link to="/">Home</Link>&nbsp;</button>
+                  <button className="navbar-item"><Link to="/profile">Profile</Link></button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
   );
-};
-
-export default NavBar;
+}
