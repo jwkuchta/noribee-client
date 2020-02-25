@@ -8,7 +8,7 @@ const app = express()
 // Set up Auth0 configuration
 const authConfig = {
   domain: "dev-q3adauy2.auth0.com",
-  audience: "YOUR_API_IDENTIFIER"
+  audience: "noribee-auth0-api"
 }
 
 // Define middleware that validates incoming bearer tokens

@@ -5,44 +5,42 @@ import { useAuth0 } from "../auth0"
 
 const ExternalApi = () => {
   const [showResult, setShowResult] = useState(false)
+  // const [showResult] = useState(false)
   const [apiMessage, setApiMessage] = useState("")
   const { getTokenSilently } = useAuth0()
 
-  // const callApi = async () => {
-  //   debugger
-  //   try {
-  //     const token = await getTokenSilently()
-  //     debugger
-  //     const response = await fetch("/api/external", {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       }
-  //     })
-  //     debugger
-  //     const responseData = await response.json()
-  //     debugger
+  const callApi = async () => {
+    try {
+      const token = await getTokenSilently()
+      const response = await fetch("/api/external", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const responseData = await response.json()
+      console.log(responseData)
 
-  //     setShowResult(true)
-  //     debugger
-  //     setApiMessage(responseData)
-  //     debugger
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-
-// my attempt to achieve the same call with fetch:
-    const callApi = () => {
-        const token = getTokenSilently();
-        fetch("/api/external", {
-            headers: {
-            Authorization: `Bearer ${token}`
-            }
-        })
-        .then(resp => resp.json())
-        .then(json => setApiMessage(json))
-        .catch(error => console.log(error))
+      setShowResult(true)
+      setApiMessage(responseData)
+    } catch (error) {
+      console.error(error)
     }
+  }
+
+// my (failed) attempt to achieve the same call with fetch:
+    // const callApi = () => {
+    //     const token = getTokenSilently();
+    //     return fetch("/api/external", {
+    //         headers: {
+    //         Authorization: `Bearer ${token}`
+    //         }
+    //     })
+    //     .then(resp => resp.json())
+    //     // .then(json => setApiMessage(json))
+    //     .then(json => console.log(json))
+    //     // .then(apiMessage => console.log(apiMessage))
+    //     .catch(error => console.log(error))
+    // }
 
   return (
     <>
