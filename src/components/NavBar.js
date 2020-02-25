@@ -1,11 +1,12 @@
-import React from 'react';
-import { useAuth0 } from "../react-auth0-spa";
-import { Link } from "react-router-dom";
+import React from 'react'
+// provides the functions needed to log in/out and determine if user is logged in
+import { useAuth0 } from "../auth0"
+import { Link } from "react-router-dom"
 import '../stylesheets/NavBar.scss'
 import 'bulma/css/bulma.css'
 
 export default function NavBar() {
-  const { isLoading, user, loginWithRedirect, logout } = useAuth0();
+  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0()
 
   return (
     <header>
@@ -16,8 +17,8 @@ export default function NavBar() {
               <button className="navbar-item">My Cool App!</button>
             </div>
             <div className="navbar-end">
-              {!isLoading && !user && (<button onClick={loginWithRedirect} className="navbar-item">Login</button>)}
-              {!isLoading && user && (
+              {!isAuthenticated && (<button onClick={loginWithRedirect} className="navbar-item">Login</button>)}
+              {isAuthenticated && (
                 <>
                   <button className="navbar-item">{user.name} <img src={user.picture} alt="My Avatar" /></button>
                   <button onClick={() => logout({ returnTo: window.location.origin })}className="navbar-item">Logout</button>
@@ -30,5 +31,5 @@ export default function NavBar() {
         </div>
       </nav>
     </header>
-  );
+  )
 }
