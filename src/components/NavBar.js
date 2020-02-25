@@ -24,6 +24,8 @@ export default function NavBar() {
                   <button onClick={() => logout({ returnTo: window.location.origin })}className="navbar-item">Logout</button>
                   <button className="navbar-item"><Link to="/">Home</Link>&nbsp;</button>
                   <button className="navbar-item"><Link to="/profile">Profile</Link></button>
+                  {/* added in Part 2, Step 5 (6?) */}
+                  <button className="navbar-item"><Link to="/external-api">External Api</Link></button>
                 </>
               )}
             </div>

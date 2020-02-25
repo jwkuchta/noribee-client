@@ -3,7 +3,7 @@
 // const { loading, user, getTokenSilently, getIdTokenClaims } = useAuth0();
 
 export const addUserToDB = (user) => {
-    fetch('http://localhost:3000/users', {
+    fetch('http://localhost:4000/users', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${localStorage.jwt}`,
