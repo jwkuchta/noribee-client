@@ -26,22 +26,7 @@ const ExternalApi = () => {
       console.error(error)
     }
   }
-
-// my (failed) attempt to achieve the same call with fetch:
-    // const callApi = () => {
-    //     const token = getTokenSilently();
-    //     return fetch("/api/external", {
-    //         headers: {
-    //         Authorization: `Bearer ${token}`
-    //         }
-    //     })
-    //     .then(resp => resp.json())
-    //     // .then(json => setApiMessage(json))
-    //     .then(json => console.log(json))
-    //     // .then(apiMessage => console.log(apiMessage))
-    //     .catch(error => console.log(error))
-    // }
-
+  
   return (
     <>
       <h1>External API</h1>
