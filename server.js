@@ -77,5 +77,22 @@ const getFullProfile = token => {
   })
 }
 
+const getManagementToken = () => {
+  var request = require("request");
+
+  var options = { method: 'POST',
+    url: 'https://dev-q3adauy2.auth0.com/oauth/token',
+    headers: { 'content-type': 'application/json' },
+    body: '{"client_id":"wAKpPXqk7xnXNPGiFTVC4RHLxShKj5WV","client_secret":"Rrw6vVqZEG-V7HrazVfb6UQSmX32F5tow4BUtuoJwzkhNj4TMgIQ1a219PfM-q56","audience":"https://dev-q3adauy2.auth0.com/api/v2/","grant_type":"client_credentials"}' };
+
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error);
+
+    console.log(response, body);
+  })
+}
+
+console.log(getManagementToken())
+
 // Start the app
 app.listen(3001, () => console.log('API listening on 3001'))

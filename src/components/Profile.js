@@ -15,7 +15,7 @@ const Profile = () => {
 
   const handleUser = user => {
     getAndDecodeToken()
-    getFullProfileDEV()
+    // getFullProfileDEV()
     // getFullProfilePROD()
   }
 
@@ -34,24 +34,24 @@ const Profile = () => {
   }
 
   const parseJwt = token => {
-    console.log({"token": token})
     let base64payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
     let base64header = token.split('.')[0].replace(/-/g, '+').replace(/_/g, '/')
     let jsonPayload = decodeURIComponent(atob(base64payload).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))
     let jsonHeader = decodeURIComponent(atob(base64header).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))
-    console.log({"payload": JSON.parse(jsonPayload),"headers": JSON.parse(jsonHeader)})
+    console.log({"token": token, "payload": JSON.parse(jsonPayload),"headers": JSON.parse(jsonHeader)})
     return JSON.parse(jsonPayload);
   }
 
   const getAndDecodeToken = () => {
     getTokenSilently()
     .then(token => {
+      getFullProfileDEV()
+      // getFullProfilePROD()
       parseJwt(token)
-      // getFullProfile()
-      callRails(token)
     })
   }
-
+  
+  // this function uses a test token from API Explorer
   const getFullProfileDEV = () => {
     fetch(`https://dev-q3adauy2.auth0.com/api/v2/users/${user.sub}`, {
       method: 'GET',
@@ -60,7 +60,6 @@ const Profile = () => {
       }
     })
     .then(resp => resp.json())
-    // .then(userData => console.log(userData["identities"][0]["access_token"]))
     .then(userData => {
       addUserToDB({
         "sub": user.sub,
@@ -77,38 +76,29 @@ const Profile = () => {
     // .then(getUserFromDb(user))
   }
 
-  const getFullProfilePROD = () => {
-    fetch(`https://dev-q3adauy2.auth0.com/api/v2/users/${user.sub}`, {
-      method: 'GET',
-      headers: {
-        "Authorization": `Bearer ${process.env.REACT_APP_TEST_TOKEN}`
-      }
-    })
-    .then(resp => resp.json())
-    // .then(userData => console.log(userData["identities"][0]["access_token"]))
-    .then(userData => addUserToDB({
-      "sub": user.sub,
-      "nickname": user.nickname,
-      "email": user.email,
-      "name": user.name,
-      "picture": user.picture,
-      "picture_large": userData['picture_large'],
-      "user_id": userData['identities'][0]['user_id'],
-      "access_token": userData['identities'][0]['access_token']
-    }))
-  }
-
-  const callRails = token => {
-    var request = require("request")
-
-    var options = {method: 'GET', url: 'http://localhost:4000/api/private'}
-
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error)
-
-      // console.log(body)
-    })
-  }
+  // console.log(managementToken)
+  
+  // this functions gets Access Token from Auth0 Management API programatically
+  // const getFullProfilePROD = () => {
+  //   fetch(`https://dev-q3adauy2.auth0.com/api/v2/users/${user.sub}`, {
+  //     method: 'GET',
+  //     headers: {
+  //       "Authorization": `Bearer ${managementToken}`
+  //     }
+  //   })
+  //   .then(resp => resp.json())
+  //   .then(json => console.log(json))
+  //   .then(userData => addUserToDB({
+  //     "sub": user.sub,
+  //     "nickname": user.nickname,
+  //     "email": user.email,
+  //     "name": user.name,
+  //     "picture": user.picture,
+  //     "picture_large": userData['picture_large'],
+  //     "user_id": userData['identities'][0]['user_id'],
+  //     "access_token": userData['identities'][0]['access_token']
+  //   }))
+  // }
 
   return (
     <Fragment>

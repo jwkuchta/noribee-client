@@ -23,6 +23,8 @@ ReactDOM.render(
     audience={config.audience}
     scope={config.scope}
     response_type={config.response_type}
+    nonce={config.nonce}
+    state={config.state}
     onRedirectCallback={onRedirectCallback}
   >
     <App />
@@ -32,5 +34,4 @@ ReactDOM.render(
 )
 
 serviceWorker.unregister()
-
 
